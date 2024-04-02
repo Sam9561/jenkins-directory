@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    environment {
+        name = 'manisha'
+    }
+    parameters {
+        string(name: 'person' , defaultValue: 'manisha malthane' , description: "who are you?")
+        booleanParam(name: 'ismale' , defaultValue: true , description: "")
+    }
+    stages {
+        stage('Run command') {
+            steps {
+                sh '''
+                ls 
+                pwd
+                date
+                '''
+            }
+        }
+        stage('Parameters') {
+            environment {
+                username = 'manisha'
+            }
+            steps {
+                sh 'echo "${BUILD_ID}"'
+                sh 'echo "${name}"'
+                sh 'echo "${person}"'
+            }
+        }
+        stage('Continue ?') {
+            input {
+            message "Should we continue?"
+            ok "Yes we should"
+            }
+            steps {
+               echo "deploy on prod"
+            }    
+        }
+        stage('Deploy on Prod') {
+            steps {
+                echo 'Deploy on Prod'
+                
+            }
+        }
+    }
+    post{
+        always{
+            echo 'i will always say hello'
+        }
+       failure{
+            echo 'failure'
+        }
+        success{
+            echo 'success'
+        }
+    }
+}    
